@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.chronovox.R
 import com.example.chronovox.components.ClickableTextComponent
 import com.example.chronovox.components.ContinueWithGoogle
@@ -19,10 +20,13 @@ import com.example.chronovox.components.HeadingTextComponent
 import com.example.chronovox.components.InputTextField
 import com.example.chronovox.components.PasswordTextField
 import com.example.chronovox.components.RegularButtonComponent
+import com.example.chronovox.navigation.Screen
 import com.example.chronovox.ui.theme.ChronoWhite
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(
+    navController: NavController
+) {
     Surface(
         color = ChronoWhite,
         modifier = Modifier
@@ -38,7 +42,12 @@ fun SignUpScreen() {
             InputTextField(labelValue = "Name", painterResource(id = R.drawable.profile))
             InputTextField(labelValue = "Email", painterResource(id = R.drawable.email))
             PasswordTextField(labelValue = "Password", painterResource(id = R.drawable.lock))
-           ClickableTextComponent(initialText = "Already have an account? ", actionText = "Sign in ",onTextSelected = {})
+            ClickableTextComponent(
+                initialText = "Already have an account? ",
+                actionText = "Sign in ",
+                onTextSelected = {
+                    navController.navigate(route = Screen.SignIn.route)
+                })
 
             RegularButtonComponent(value = "Create account", onButtonClicked = { /*TODO*/ })
 
