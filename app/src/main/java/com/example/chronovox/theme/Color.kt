@@ -1,4 +1,4 @@
-package com.example.chronovox.ui.theme
+package com.example.chronovox.theme
 
 import androidx.compose.ui.graphics.Color
 

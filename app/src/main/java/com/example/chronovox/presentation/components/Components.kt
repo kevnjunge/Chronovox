@@ -1,4 +1,4 @@
-package com.example.chronovox.components
+package com.example.chronovox.presentation.components
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -49,8 +51,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.chronovox.ui.theme.ColombiaBlue
-import com.example.chronovox.ui.theme.DelftBlue
+import com.example.chronovox.theme.ColombiaBlue
+import com.example.chronovox.theme.DelftBlue
 
 @Composable
 fun RegularTextComponent(value: String) {
@@ -88,7 +90,11 @@ fun HeadingTextComponent(value: String) {
 
 
 @Composable
-fun InputTextField(labelValue: String, painterResource: Painter) {
+fun InputTextField(
+    labelValue: String, painterResource: Painter,
+    onTextSelected: (String) -> Unit,
+    errorStatus:Boolean = false
+) {
 
     val textValue = remember {
         mutableStateOf("")
@@ -102,20 +108,29 @@ fun InputTextField(labelValue: String, painterResource: Painter) {
             focusedLabelColor = DelftBlue,
             cursorColor = Color.Black
         ),
-        keyboardOptions = KeyboardOptions.Default,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        singleLine = true,
+        maxLines = 1,
         value = textValue.value,
         onValueChange = {
             textValue.value = it
+            onTextSelected(it)
         },
         leadingIcon = {
             Icon(painter = painterResource, contentDescription = "")
-        }
+        },
+        isError = !errorStatus
 
     )
 }
 
 @Composable
-fun PasswordTextField(labelValue: String, painterResource: Painter) {
+fun PasswordTextField(
+    labelValue: String,
+    painterResource: Painter,
+    onTextSelected: (String) -> Unit,
+    errorStatus: Boolean = false
+) {
 
     val password = remember {
         mutableStateOf("")
@@ -133,14 +148,24 @@ fun PasswordTextField(labelValue: String, painterResource: Painter) {
             focusedLabelColor = DelftBlue,
             cursorColor = DelftBlue
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done
+        ),
+        singleLine = true,
+        maxLines = 1,
+        keyboardActions = KeyboardActions {
+
+        },
         value = password.value,
         onValueChange = {
             password.value = it
+            onTextSelected(it)
         },
         leadingIcon = {
             Icon(painter = painterResource, contentDescription = "")
         },
+        isError = !errorStatus,
         trailingIcon = {
             val iconImage = if (passwordVisible.value) {
                 Icons.Filled.Visibility
@@ -181,9 +206,14 @@ fun PasswordTextField(labelValue: String, painterResource: Painter) {
 //}
 
 @Composable
-fun ClickableTextComponent(initialText: String, actionText:String, onTextSelected: (String) -> Unit) {
+fun ClickableTextComponent(
+    initialText: String,
+    actionText: String,
+    onTextSelected: (String) -> Unit
+) {
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(vertical = 20.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -217,19 +247,17 @@ fun ClickableTextComponent(initialText: String, actionText:String, onTextSelecte
 }
 
 @Composable
-fun RegularButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boolean = false) {
+fun RegularButtonComponent(value: String, onButtonClicked: () -> Unit) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp)
             .padding(vertical = 20.dp),
-        onClick = {
-            onButtonClicked.invoke()
-        },
+        onClick = onButtonClicked,
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         shape = RoundedCornerShape(10.dp),
-        enabled = isEnabled
+
     ) {
         Box(
             modifier = Modifier

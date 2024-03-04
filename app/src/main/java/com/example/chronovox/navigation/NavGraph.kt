@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.chronovox.screens.SignInScreen
-import com.example.chronovox.screens.SignUpScreen
+import com.example.chronovox.presentation.screens.signIn.SignInScreen
+import com.example.chronovox.presentation.screens.signUp.SignUpScreen
 
 @Composable
 fun SetUpNavGraph(
