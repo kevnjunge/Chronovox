@@ -247,7 +247,7 @@ fun ClickableTextComponent(
 }
 
 @Composable
-fun RegularButtonComponent(value: String, onButtonClicked: () -> Unit) {
+fun RegularButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boolean = false) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -257,6 +257,7 @@ fun RegularButtonComponent(value: String, onButtonClicked: () -> Unit) {
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         shape = RoundedCornerShape(10.dp),
+        enabled = isEnabled
 
     ) {
         Box(
