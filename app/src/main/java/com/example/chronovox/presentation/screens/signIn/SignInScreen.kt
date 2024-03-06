@@ -85,8 +85,6 @@ fun SignInScreen(
         }
         if (signInViewModel.loginInProgress.value){
             CircularProgressIndicator()
-        }else{
-
         }
     }
 }

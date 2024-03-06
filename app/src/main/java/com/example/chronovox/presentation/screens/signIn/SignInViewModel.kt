@@ -5,15 +5,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.chronovox.util.FormValidation
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class SignInViewModel : ViewModel() {
-    private val TAG = SignInViewModel::class.simpleName
 
     var signInUiState = mutableStateOf(SignInUiState())
 
     var allValidationPassed = mutableStateOf(false)
 
     var loginInProgress = mutableStateOf(false)
+
+    private val _isUserLoggedIn: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn
+
+    private var sessionChecked = false
 
     fun onEvent(event: SignInUiEvent) {
         when (event) {
@@ -53,6 +59,19 @@ class SignInViewModel : ViewModel() {
         allValidationPassed.value = emailResult.status && passwordResult.status
     }
 
+    fun checkActiveSession(): Boolean {
+        if (!sessionChecked) {
+
+            if (FirebaseAuth.getInstance().currentUser != null) {
+                _isUserLoggedIn.value = true
+            } else {
+                _isUserLoggedIn.value = false
+            }
+            sessionChecked = true
+        }
+        return _isUserLoggedIn.value
+    }
+
 
     private fun login() {
 
@@ -62,8 +81,6 @@ class SignInViewModel : ViewModel() {
 
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                Log.d(TAG, "Inside Login Success")
-                Log.d(TAG, "${it.isSuccessful}")
                 if (it.isSuccessful) {
 
                     loginInProgress.value = false
@@ -72,7 +89,7 @@ class SignInViewModel : ViewModel() {
                 }
             }
             .addOnFailureListener {
-                Log.d(TAG, "Login Failure")
+
                 loginInProgress.value = false
 
 
