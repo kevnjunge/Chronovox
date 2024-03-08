@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.chronovox.navigation.Screen
+import com.example.chronovox.presentation.components.PaperText
 import com.example.chronovox.presentation.components.RegularButtonComponent
 import com.example.chronovox.presentation.components.RegularTextComponent
 import com.example.chronovox.presentation.screens.signUp.SignUpViewModel
@@ -21,15 +22,16 @@ fun HomeScreen(
     navController: NavController,
     signUpViewModel: SignUpViewModel = viewModel()
 ) {
-    Surface (
+    Surface(
         modifier = Modifier
             .fillMaxSize()
             .background(ChronoWhite)
-            .padding(28.dp)
-    ){
-        Column (
+
+    ) {
+        Column(
             modifier = Modifier.fillMaxSize()
-        ){
+                .padding(8.dp)
+        ) {
             RegularTextComponent(value = "Home")
             RegularButtonComponent(value = "LogOut", onButtonClicked = {
                 signUpViewModel.logout()
@@ -37,9 +39,11 @@ fun HomeScreen(
                     navController.navigate(route = Screen.SignIn.route)
                 }
             }, isEnabled = true)
-            
+
+            PaperText()
+
         }
-        
+
     }
 
 }

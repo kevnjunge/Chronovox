@@ -1,6 +1,5 @@
 package com.example.chronovox.presentation.screens.signIn
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.chronovox.util.FormValidation

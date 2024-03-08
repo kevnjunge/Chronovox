@@ -8,6 +8,12 @@ val ColombiaBlue = Color(0xFFC5DCFB )
 val TextBlack = Color(0xFF171717)
 val MicadoYellow = Color(0xFFFDC500)
 
+
+val mediumBlue = Color(0xFF0000cd)
+val paperLineBlue = Color(0xFF91d1d3)
+val verticalLineRed = Color(0xFFD44147)
+val paperBackGround = Color(0xFFf4f0e8)
+
 //val Purple80 = Color(0xFFD0BCFF)
 //val PurpleGrey80 = Color(0xFFCCC2DC)
 //val Pink80 = Color(0xFFEFB8C8)
