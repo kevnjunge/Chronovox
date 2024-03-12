@@ -187,24 +187,6 @@ fun PasswordTextField(
     )
 }
 
-//@Composable
-//fun CheckboxComponent(value:String, onTextSelected: (String) -> Unit){
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .heightIn(56.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ){
-//        val checkedState = remember{
-//            mutableStateOf(false)
-//        }
-//        Checkbox(checked = checkedState.value, onCheckedChange = {
-//            checkedState.value != checkedState.value
-//        })
-//        ClickableTextComponent(value, onTextSelected = onTextSelected )
-//    }
-//}
-
 @Composable
 fun ClickableTextComponent(
     initialText: String,
@@ -252,7 +234,7 @@ fun RegularButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp)
-            .padding(vertical = 20.dp),
+            .padding(vertical = 8.dp),
         onClick = onButtonClicked,
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(Color.Transparent),

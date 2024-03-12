@@ -3,6 +3,7 @@ package com.example.chronovox.theme
 import androidx.compose.ui.graphics.Color
 
 val ChronoWhite = Color(0xFFF5F5F5)
+val BgWhite = Color(0xFFf2f5f6)
 val DelftBlue = Color(0xFF0C2A5A)
 val ColombiaBlue = Color(0xFFC5DCFB )
 val TextBlack = Color(0xFF171717)
