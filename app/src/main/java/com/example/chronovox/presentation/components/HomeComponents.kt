@@ -41,6 +41,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
+import com.example.chronovox.presentation.screens.detail.DetailUiState
+import com.example.chronovox.presentation.screens.detail.DetailViewModel
 import com.example.chronovox.theme.BgWhite
 import com.example.chronovox.theme.MicadoYellow
 import com.example.chronovox.theme.mediumBlue
@@ -50,7 +52,9 @@ import com.example.chronovox.theme.verticalLineRed
 
 
 @Composable
-fun PaperText() {
+fun PaperText(
+    detailViewModel: DetailViewModel?
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -138,14 +142,17 @@ fun PaperText() {
                     .padding(start = 36.dp, top = 0.dp, end = 0.dp, bottom = 0.dp),
                 verticalArrangement = Arrangement.spacedBy(30.dp)
             ) {
-                TextArea()
+                TextArea(detailViewModel= detailViewModel)
             }
         }
     }
 }
 
 @Composable
-fun TextArea() {
+fun TextArea(
+    detailViewModel: DetailViewModel?
+) {
+    val detailUiState = detailViewModel?.detailUiState ?: DetailUiState()
     var text by remember { mutableStateOf("Hello world ! \n Here's a story for you...") }
 
     val sentences = text.split(". ") // Split text into sentences
@@ -168,14 +175,14 @@ fun TextArea() {
             ) {
                 sentences.forEachIndexed { index, sentence ->
                     BasicTextField(
-                        value = sentence,
-                        onValueChange = { text = it },
+                        value = detailUiState.journalEntry,
+                        onValueChange = {detailViewModel?.onJournalEntryChange(it) },
                         textStyle = TextStyle(
                             fontFamily = FontFamily.Cursive,
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             lineHeight = 30.sp,
-                            color = mediumBlue
+                            color = mediumBlue,
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -188,6 +195,7 @@ fun TextArea() {
         MediaIcons()
     }
 }
+
 
 
 @Composable
