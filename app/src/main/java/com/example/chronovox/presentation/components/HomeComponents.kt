@@ -13,17 +13,15 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.Photo
 import androidx.compose.material.icons.outlined.Videocam
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -64,9 +61,7 @@ fun PaperText(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
                 .imePadding()
-                .clip(RoundedCornerShape(10.dp))
                 .background(paperBackGround)
         ) {
             // Draw the black circles
@@ -111,21 +106,21 @@ fun PaperText(
             // Draw the horizontal lines
             Canvas(
                 modifier = Modifier.matchParentSize()
-
             ) {
                 val lineColor = paperLineBlue
                 val lineThickness = 1.dp.toPx()
                 val lineSpacing = 30.dp // Adjust for desired spacing between lines
                 val paddingLeft = 40.dp.toPx() // Padding for the text
-                val paddingTop = 20.dp.toPx() // Padding for the top of the text area
+                val paddingTop = 50.dp.toPx() // Padding for the top of the text area
                 val paddingBottom = 20.dp.toPx() // Padding for the bottom of the text area
 
                 // Calculate the number of lines based on the available height
                 val availableHeight = size.height - paddingTop - paddingBottom
                 val numberOfLines = (availableHeight / lineSpacing.toPx()).toInt()
 
+                // Adjust yPosition calculation to include top padding
                 repeat(numberOfLines) { index ->
-                    val yPosition = (index * lineSpacing).toPx()
+                    val yPosition = paddingTop + (index * lineSpacing).toPx()
                     drawLine(
                         color = lineColor,
                         start = Offset(paddingLeft, yPosition), // Padding for the text area
@@ -135,11 +130,12 @@ fun PaperText(
                 }
             }
 
+
             // Text area
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(start = 36.dp, top = 0.dp, end = 0.dp, bottom = 0.dp),
+                    .padding(start = 38.dp, top = 48.dp, end = 0.dp, bottom = 0.dp),
                 verticalArrangement = Arrangement.spacedBy(30.dp)
             ) {
                 TextArea(detailViewModel= detailViewModel)
@@ -173,10 +169,11 @@ fun TextArea(
                     .fillMaxSize()
                     .background(Color.Transparent)
             ) {
-                sentences.forEachIndexed { index, sentence ->
+                sentences.forEachIndexed { index, _ ->
+                    val hint = if (index == 0) "Hi,What's on your mind?" else null
                     BasicTextField(
                         value = detailUiState.journalEntry,
-                        onValueChange = {detailViewModel?.onJournalEntryChange(it) },
+                        onValueChange = { detailViewModel?.onJournalEntryChange(it) },
                         textStyle = TextStyle(
                             fontFamily = FontFamily.Cursive,
                             fontWeight = FontWeight.Bold,
@@ -186,7 +183,29 @@ fun TextArea(
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color.Transparent)
+                            .background(Color.Transparent),
+                        singleLine = false,
+                        decorationBox = { innerTextField ->
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.TopStart
+                            ) {
+                                if (detailUiState.journalEntry.isEmpty()) {
+                                    hint?.let {
+                                        Text(
+                                            text = it,
+                                            style = TextStyle(
+                                                color = Color.Gray,
+                                                fontSize = 18.sp,
+                                                fontFamily = FontFamily.Cursive,
+                                                fontWeight = FontWeight.Bold,
+                                            ),
+                                        )
+                                    }
+                                }
+                                innerTextField()
+                            }
+                        }
                     )
                 }
             }
@@ -198,8 +217,9 @@ fun TextArea(
 
 
 
+
 @Composable
-fun MediaIcons(modifier: Modifier = Modifier) {
+fun MediaIcons() {
     Box(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -228,21 +248,6 @@ fun MediaIcons(modifier: Modifier = Modifier) {
             )
         }
 
-        Row(
-            modifier = Modifier.align(Alignment.BottomEnd)
-        ) {
-            FloatingActionButton(
-                onClick = {/*TODO*/ },
-                shape = CircleShape,
-                containerColor = BgWhite
-            ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.Send,
-                    contentDescription = "Send",
-                    tint = MicadoYellow
-                )
-            }
-        }
     }
 
 }
