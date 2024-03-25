@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp
 
 data class Journals(
     val userId:String = "",
+    val journalEntryTitle:String = "",
     val journalEntry:String = "",
     val timestamp: Timestamp = Timestamp.now(),
     val documentId: String = ""

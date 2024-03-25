@@ -5,6 +5,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.channels.awaitClose
@@ -30,7 +31,7 @@ class StorageRepository() {
 
         try {
             snapshotStateListener = journalRef
-                .orderBy("timestamp")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .whereEqualTo("userId", userId)
                 .addSnapshotListener { snapshot, e ->
                     val response = if (snapshot != null) {
@@ -55,14 +56,14 @@ class StorageRepository() {
     }
 
     fun getJournalEntry(
-        journalEntryId:String,
+        journalEntryId: String,
         onError: (Throwable?) -> Unit,
         onSuccess: (Journals?) -> Unit
-    ){
+    ) {
         journalRef.document(journalEntryId).get().addOnSuccessListener {
             onSuccess.invoke(it?.toObject(Journals::class.java))
         }
-            .addOnFailureListener {result ->
+            .addOnFailureListener { result ->
                 onError.invoke(result.cause)
 
             }
@@ -70,19 +71,21 @@ class StorageRepository() {
 
     fun addJournalEntry(
         userId: String,
-        journalEntry:String,
+        journalEntryTitle: String,
+        journalEntry: String,
         timestamp: Timestamp,
         onComplete: (Boolean) -> Unit
-    ){
+    ) {
         val documentId = journalRef.document().id
-        val journalEntry = Journals(userId,journalEntry,timestamp, documentId = documentId)
+        val entry =
+            Journals(userId, journalEntryTitle, journalEntry, timestamp, documentId = documentId)
 
-        journalRef.document(documentId).set(journalEntry).addOnCompleteListener { result ->
+        journalRef.document(documentId).set(entry).addOnCompleteListener { result ->
             onComplete.invoke(result.isSuccessful)
         }
     }
 
-    fun deleteJournalEntry(journalEntryId:String,  onComplete: (Boolean) -> Unit){
+    fun deleteJournalEntry(journalEntryId: String, onComplete: (Boolean) -> Unit) {
         journalRef.document(journalEntryId)
             .delete()
             .addOnCompleteListener {
@@ -93,14 +96,16 @@ class StorageRepository() {
 
     fun updateJournalEntry(
         journalEntryId: String,
+        journalEntryTitle: String,
         journalEntry: String,
-        onResult:(Boolean) -> Unit
-    ){
+        onResult: (Boolean) -> Unit
+    ) {
         //Use hashmap when you have multiple entries
-        val updateData = hashMapOf<String,Any>(
-            "entry" to journalEntry,
+        val updateData = hashMapOf<String, Any>(
+            "journalEntryTitle" to journalEntryTitle,
+            "journalEntry" to journalEntry,
 
-        )
+            )
         journalRef.document(journalEntryId)
             .update(updateData)
             .addOnCompleteListener {

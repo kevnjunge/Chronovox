@@ -20,14 +20,23 @@ class DetailViewModel(
     private val user:FirebaseUser?
         get() = repository.user()
 
-    fun onJournalEntryChange (journalEntry: String){
-        detailUiState = detailUiState.copy(journalEntry = journalEntry)
+    fun onJournalEntryChange(title: String? = null, content: String? = null) {
+        val updatedTitle = title ?: detailUiState.journalEntryTitle
+        val updatedContent = content ?: detailUiState.journalEntry
+        // Update the state with the new values for title and content
+        detailUiState = detailUiState.copy(
+            journalEntryTitle = updatedTitle,
+            journalEntry = updatedContent
+        )
     }
+
+
 
     fun addJournalEntry(){
         if (hasUser){
             repository.addJournalEntry(
                 userId = user!!.uid,
+                journalEntryTitle = detailUiState.journalEntryTitle,
                 journalEntry = detailUiState.journalEntry,
                 timestamp = Timestamp.now()
             ){
@@ -36,9 +45,10 @@ class DetailViewModel(
         }
     }
 
-    fun setEditFields(journalEntry: Journals){
+    private fun setEditFields(journalEntryTitle: String, journalEntry: String){
         detailUiState = detailUiState.copy(
-            journalEntry = journalEntry.journalEntry
+            journalEntryTitle = journalEntryTitle,
+            journalEntry = journalEntry
         )
     }
 
@@ -46,9 +56,11 @@ class DetailViewModel(
         repository.getJournalEntry(
             journalEntryId = journalEntryId,
             onError = {},
-        ){
-            detailUiState = detailUiState.copy(selectedJournalEntry = it)
-            detailUiState.selectedJournalEntry?.let{it1 -> setEditFields(it1)}
+        ){journalEntry ->
+            journalEntry?.let {
+                detailUiState = detailUiState.copy(selectedJournalEntry = it)
+                setEditFields(it.journalEntryTitle, it.journalEntry)
+            }
         }
     }
 
@@ -57,6 +69,7 @@ class DetailViewModel(
     ){
         repository.updateJournalEntry(
             journalEntryId = journalEntryId,
+            journalEntryTitle = detailUiState.journalEntryTitle,
             journalEntry = detailUiState.journalEntry
         ){
             detailUiState = detailUiState.copy(updatedJournalEntryStatus = it)
@@ -78,6 +91,7 @@ class DetailViewModel(
 }
 
 data class  DetailUiState(
+    val journalEntryTitle:String = "",
     val journalEntry:String = "",
     val journalEntryAddedStatus: Boolean = false,
     val updatedJournalEntryStatus: Boolean = false,

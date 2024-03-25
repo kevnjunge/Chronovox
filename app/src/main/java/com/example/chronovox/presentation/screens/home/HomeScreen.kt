@@ -219,7 +219,7 @@ fun JournalEntryItem(
 
     ) {
         Text(
-            text = "Dear Diary",
+            text = journalEntry.journalEntryTitle,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             maxLines = 1,

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.Photo
@@ -35,6 +36,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
@@ -52,6 +54,8 @@ import com.example.chronovox.theme.verticalLineRed
 fun PaperText(
     detailViewModel: DetailViewModel?
 ) {
+    val title by remember { mutableStateOf("") } // New state variable for title
+    val detailUiState = detailViewModel?.detailUiState ?: DetailUiState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -129,6 +133,43 @@ fun PaperText(
                     )
                 }
             }
+            val hint =  "Heading..."
+            BasicTextField(
+                value = detailUiState.journalEntryTitle,
+                onValueChange = { detailViewModel?.onJournalEntryChange(title = it) },
+                textStyle = TextStyle(
+                    fontFamily = FontFamily.Cursive,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    lineHeight = 30.sp,
+                    color = Color.Black,
+                ),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 44.dp, top = 30.dp, end = 0.dp, bottom = 0.dp)
+                    .background(Color.Transparent),
+                singleLine = true,
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.TopStart
+                    ) {
+                        if (detailUiState.journalEntryTitle.isEmpty()) {
+                            Text(
+                                text = hint,
+                                style = TextStyle(
+                                    color = Color.Gray,
+                                    fontSize = 18.sp,
+                                    fontFamily = FontFamily.Cursive,
+                                    fontWeight = FontWeight.Bold,
+                                ),
+                            )
+                        }
+                        innerTextField()
+                    }
+                }
+            )
 
 
             // Text area
@@ -173,7 +214,7 @@ fun TextArea(
                     val hint = if (index == 0) "Hi,What's on your mind?" else null
                     BasicTextField(
                         value = detailUiState.journalEntry,
-                        onValueChange = { detailViewModel?.onJournalEntryChange(it) },
+                        onValueChange = { detailViewModel?.onJournalEntryChange(content = it) },
                         textStyle = TextStyle(
                             fontFamily = FontFamily.Cursive,
                             fontWeight = FontWeight.Bold,
