@@ -61,9 +61,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended:1.6.2")
+    implementation("androidx.compose.material:material-icons-extended:1.6.3")
     implementation ("com.google.android.gms:play-services-auth:21.0.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    //SplashScreen
+    implementation("androidx.core:core-splashscreen:1.0.1")
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
     // Import the Firebase BoM

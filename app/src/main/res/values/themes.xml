@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.Chronovox" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/bg_color</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/chrono_logo</item>
+        <item name="windowSplashScreenAnimationDuration">2000</item>
+        <item name="postSplashScreenTheme">@style/Theme.Chronovox</item>
+    </style>
 </resources>

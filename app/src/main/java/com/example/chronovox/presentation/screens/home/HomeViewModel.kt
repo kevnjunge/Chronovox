@@ -15,7 +15,6 @@ class HomeViewModel(
 ) : ViewModel() {
     var homeUiState by mutableStateOf(HomeUiState())
 
-    val user = repository.user()
     val hasUser: Boolean
         get() = repository.hasUser()
     private val userId: String

@@ -80,7 +80,6 @@ fun HomeScreen(
         mutableStateOf(null)
     }
 
-    val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = Unit) {
