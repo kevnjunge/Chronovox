@@ -1,6 +1,7 @@
 package com.example.chronovox.presentation.components
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,11 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -26,7 +23,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -37,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -91,11 +88,12 @@ fun HeadingTextComponent(value: String) {
 
 @Composable
 fun InputTextField(
-    labelValue: String, painterResource: Painter,
+    labelValue: String,
+    painterResource: Painter,
     onTextSelected: (String) -> Unit,
-    errorStatus:Boolean = false
+    errorStatus: Boolean = false,
+    errorMessage: String? = null
 ) {
-
     val textValue = remember {
         mutableStateOf("")
     }
@@ -116,12 +114,21 @@ fun InputTextField(
             textValue.value = it
             onTextSelected(it)
         },
-        leadingIcon = {
-            Icon(painter = painterResource, contentDescription = "")
-        },
-        isError = !errorStatus
-
+        leadingIcon = { Icon(painter = painterResource, contentDescription = "") },
+        isError = errorStatus
     )
+
+    if (errorStatus && errorMessage != null) {
+        Text(
+            text = errorMessage,
+            style = TextStyle(
+                color = Color.Red,
+                fontSize = 12.sp
+            ),
+            modifier = Modifier.padding(start = 16.dp),
+            textAlign = TextAlign.Start
+        )
+    }
 }
 
 @Composable
@@ -129,9 +136,9 @@ fun PasswordTextField(
     labelValue: String,
     painterResource: Painter,
     onTextSelected: (String) -> Unit,
-    errorStatus: Boolean = false
+    errorStatus: Boolean = false,
+    errorMessage: String? = null
 ) {
-
     val password = remember {
         mutableStateOf("")
     }
@@ -154,37 +161,27 @@ fun PasswordTextField(
         ),
         singleLine = true,
         maxLines = 1,
-        keyboardActions = KeyboardActions {
-
-        },
         value = password.value,
         onValueChange = {
             password.value = it
             onTextSelected(it)
         },
-        leadingIcon = {
-            Icon(painter = painterResource, contentDescription = "")
-        },
-        isError = !errorStatus,
-        trailingIcon = {
-            val iconImage = if (passwordVisible.value) {
-                Icons.Filled.Visibility
-            } else {
-                Icons.Filled.VisibilityOff
-            }
-            var description = if (passwordVisible.value) {
-                "Hide Password"
-            } else {
-                "Show Password"
-            }
-
-            IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
-                Icon(imageVector = iconImage, contentDescription = description)
-            }
-        },
+        leadingIcon = { Icon(painter = painterResource, contentDescription = "") },
+        isError = errorStatus,
         visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation()
-
     )
+
+    if (errorStatus && errorMessage != null) {
+        Text(
+            text = errorMessage,
+            style = TextStyle(
+                color = Color.Red,
+                fontSize = 12.sp
+            ),
+            modifier = Modifier.padding(start = 16.dp),
+            textAlign = TextAlign.Start
+        )
+    }
 }
 
 @Composable
@@ -229,13 +226,17 @@ fun ClickableTextComponent(
 }
 
 @Composable
-fun RegularButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boolean = false) {
+fun RegularButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boolean = false, errorMessages: List<String> = emptyList()) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp)
             .padding(vertical = 8.dp),
-        onClick = onButtonClicked,
+        onClick = {
+            if (errorMessages.isEmpty()) {
+                onButtonClicked()
+            }
+        },
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         shape = RoundedCornerShape(10.dp),
@@ -296,7 +297,12 @@ fun ContinueWithGoogle(text: String, onclick: () -> Unit) {
         }
     }
 }
-
+@Composable
+fun showToast(message: String) {
+    val context = LocalContext.current
+    val toast = remember { Toast.makeText(context, message, Toast.LENGTH_SHORT) }
+    toast.show()
+}
 @Composable
 fun DividerTextComponent() {
     Row(

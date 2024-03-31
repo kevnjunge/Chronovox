@@ -1,5 +1,6 @@
 package com.example.chronovox.presentation.screens.signUp
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -26,7 +28,6 @@ import com.example.chronovox.presentation.components.InputTextField
 import com.example.chronovox.presentation.components.PasswordTextField
 import com.example.chronovox.presentation.components.RegularButtonComponent
 import com.example.chronovox.theme.ChronoWhite
-
 @Composable
 fun SignUpScreen(
     navController: NavController,
@@ -45,16 +46,28 @@ fun SignUpScreen(
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
 
-                //RegularTextComponent(value = "Hey there, ")
+
+                Image(
+                    painter = painterResource(id = R.drawable.chrono_logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding( 16.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+
                 HeadingTextComponent(value = "Create Account")
                 Spacer(modifier = Modifier.height(20.dp))
+                val signUpUiState = signUpViewModel.signUpUiState.value
+
                 InputTextField(
                     labelValue = "Name",
                     painterResource(id = R.drawable.profile),
                     onTextSelected = {
                         signUpViewModel.onEvent(SignUpUiEvent.NameChanged(it))
                     },
-                    errorStatus = signUpViewModel.signUpUiState.value.nameError
+                    errorStatus = signUpUiState.nameError,
+                    errorMessage = if (signUpUiState.nameError) "Name cannot be blank" else null
                 )
                 InputTextField(
                     labelValue = "Email",
@@ -62,7 +75,8 @@ fun SignUpScreen(
                     onTextSelected = {
                         signUpViewModel.onEvent(SignUpUiEvent.EmailChanged(it))
                     },
-                    errorStatus = signUpViewModel.signUpUiState.value.emailError
+                    errorStatus = signUpUiState.emailError,
+                    errorMessage = if (signUpUiState.emailError) "Enter a valid email" else null
                 )
                 PasswordTextField(
                     labelValue = "Password",
@@ -70,7 +84,8 @@ fun SignUpScreen(
                     onTextSelected = {
                         signUpViewModel.onEvent(SignUpUiEvent.PasswordChanged(it))
                     },
-                    errorStatus = signUpViewModel.signUpUiState.value.passwordError
+                    errorStatus = signUpUiState.passwordError,
+                    errorMessage = if (signUpUiState.passwordError) "Password must be at least 8 characters, containing at least one uppercase letter and one number" else null
                 )
                 ClickableTextComponent(
                     initialText = "Already have an account? ",
@@ -80,13 +95,32 @@ fun SignUpScreen(
                     })
 
                 RegularButtonComponent(
-                    value = "Create account", onButtonClicked = {
-                        signUpViewModel.onEvent(SignUpUiEvent.CreateAccountButtonClicked)
-                        signUpViewModel.navigateToHome = {
-                            navController.navigate(route = Screen.Home.route)
+                    value = "Create account",
+                    onButtonClicked = {
+                        // Trigger validation for each field
+                        signUpViewModel.onEvent(SignUpUiEvent.NameChanged(signUpViewModel.signUpUiState.value.name))
+                        signUpViewModel.onEvent(SignUpUiEvent.EmailChanged(signUpViewModel.signUpUiState.value.email))
+                        signUpViewModel.onEvent(SignUpUiEvent.PasswordChanged(signUpViewModel.signUpUiState.value.password))
+
+                        // Check if any field has an error
+                        val hasError = signUpViewModel.signUpUiState.value.nameError ||
+                                signUpViewModel.signUpUiState.value.emailError ||
+                                signUpViewModel.signUpUiState.value.passwordError
+
+                        // If any field has an error, do not proceed with account creation
+                        if (!hasError) {
+                            signUpViewModel.onEvent(SignUpUiEvent.CreateAccountButtonClicked)
+                            signUpViewModel.navigateToHome = {
+                                navController.navigate(route = Screen.Home.route)
+                            }
                         }
                     },
-                    isEnabled = signUpViewModel.allValidationsPass.value
+                    isEnabled = true,
+                    errorMessages = listOfNotNull(
+                        if (signUpUiState.nameError) "Name cannot be blank" else null,
+                        if (signUpUiState.emailError) "Enter a valid email" else null,
+                        if (signUpUiState.passwordError) "Password must be at least 8 characters, containing at least one uppercase letter and one number" else null
+                    ) // Remove null entries from the list
                 )
 
                 DividerTextComponent()
@@ -104,3 +138,5 @@ fun SignUpScreen(
         }
     }
 }
+
+

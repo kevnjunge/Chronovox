@@ -43,6 +43,8 @@ class SignUpViewModel : ViewModel() {
             is SignUpUiEvent.CreateAccountButtonClicked -> {
                 signUp()
             }
+
+            else -> {}
         }
     }
 
@@ -71,9 +73,9 @@ class SignUpViewModel : ViewModel() {
         )
 
         signUpUiState.value = signUpUiState.value.copy(
-            nameError = nameResult.status,
-            emailError = emailResult.status,
-            passwordError = passwordResult.status
+            nameError = !nameResult.status,
+            emailError = !emailResult.status,
+            passwordError = !passwordResult.status
         )
 
         allValidationsPass.value = nameResult.status && emailResult.status && passwordResult.status
@@ -112,5 +114,4 @@ class SignUpViewModel : ViewModel() {
 
         firebaseAuth.addAuthStateListener(authStateListener)
     }
-
 }

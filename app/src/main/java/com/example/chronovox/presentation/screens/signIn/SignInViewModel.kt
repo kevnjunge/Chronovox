@@ -51,8 +51,8 @@ class SignInViewModel : ViewModel() {
         )
 
         signInUiState.value = signInUiState.value.copy(
-            emailError = emailResult.status,
-            passwordError = passwordResult.status
+            emailError = !emailResult.status,
+            passwordError = !passwordResult.status
         )
 
         allValidationPassed.value = emailResult.status && passwordResult.status

@@ -1,23 +1,22 @@
 package com.example.chronovox.util
 
+import android.util.Patterns
+
 object FormValidation {
 
-    fun validateName(name: String):ValidationResult{
+    fun validateName(name: String): ValidationResult {
         return ValidationResult(
             (name.isNotEmpty())
         )
     }
 
-    fun validateEmail(email: String):ValidationResult{
-       return ValidationResult(
-           (email.isNotEmpty())
-       )
+    fun validateEmail(email: String): ValidationResult {
+        return ValidationResult(Patterns.EMAIL_ADDRESS.matcher(email).matches())
     }
 
-    fun validatePassword(password: String):ValidationResult{
-        return ValidationResult(
-            (password.isNotEmpty() && password.length >= 8)
-        )
+    fun validatePassword(password: String): ValidationResult {
+        val regex = "^(?=.*[A-Z])(?=.*\\d).{8,}\$".toRegex()
+        return ValidationResult(password.matches(regex))
     }
 
 }

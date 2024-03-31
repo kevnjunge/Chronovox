@@ -1,5 +1,6 @@
 package com.example.chronovox.presentation.screens.signIn
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import com.example.chronovox.presentation.components.HeadingTextComponent
 import com.example.chronovox.presentation.components.InputTextField
 import com.example.chronovox.presentation.components.PasswordTextField
 import com.example.chronovox.presentation.components.RegularButtonComponent
+import com.example.chronovox.presentation.screens.signUp.SignUpUiEvent
 import com.example.chronovox.theme.ChronoWhite
 
 @Composable
@@ -44,6 +47,15 @@ fun SignInScreen(
                 .padding(28.dp)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(id = R.drawable.chrono_logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+
                 HeadingTextComponent(value = "Sign in")
                 Spacer(modifier = Modifier.height(20.dp))
                 InputTextField(
@@ -52,7 +64,8 @@ fun SignInScreen(
                     onTextSelected = {
                         signInViewModel.onEvent(SignInUiEvent.EmailChanged(it))
                     },
-                    errorStatus = signInViewModel.signInUiState.value.emailError
+                    errorStatus = signInViewModel.signInUiState.value.emailError,
+                    errorMessage = if (signInViewModel.signInUiState.value.emailError) "Enter a valid email" else null
                 )
                 PasswordTextField(
                     labelValue = "Password",
@@ -66,13 +79,31 @@ fun SignInScreen(
                     initialText = "Don't have an account ? ",
                     actionText = "Sign up",
                     onTextSelected = { navController.navigate(route = Screen.SignUp.route) })
-                RegularButtonComponent(value = "Log in", onButtonClicked = {
-                    signInViewModel.onEvent(SignInUiEvent.LogInButtonClicked)
 
-                    signInViewModel.navigateToHome = {
-                        navController.navigate(route = Screen.Home.route)
-                    }
-                }, isEnabled = signInViewModel.allValidationPassed.value )
+                RegularButtonComponent(
+                    value = "Log in",
+                    onButtonClicked = {
+
+                        signInViewModel.onEvent(SignInUiEvent.EmailChanged(signInViewModel.signInUiState.value.email))
+                        signInViewModel.onEvent(SignInUiEvent.PasswordChanged(signInViewModel.signInUiState.value.password))
+
+                        val hasError = signInViewModel.signInUiState.value.emailError ||
+                                signInViewModel.signInUiState.value.passwordError
+
+                        if (!hasError) {
+                            signInViewModel.onEvent(SignInUiEvent.LogInButtonClicked)
+                            signInViewModel.navigateToHome = {
+                                navController.navigate(route = Screen.Home.route)
+                            }
+                        }
+
+                    },
+                    isEnabled = true,
+                    errorMessages = listOfNotNull(
+                        if (signInViewModel.signInUiState.value.emailError) "Name cannot be blank" else null,
+                        if (signInViewModel.signInUiState.value.passwordError) "Enter a password" else null
+                    )
+                )
 
                 DividerTextComponent()
 
@@ -83,7 +114,7 @@ fun SignInScreen(
             }
 
         }
-        if (signInViewModel.loginInProgress.value){
+        if (signInViewModel.loginInProgress.value) {
             CircularProgressIndicator()
         }
     }
