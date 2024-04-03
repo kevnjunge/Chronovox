@@ -1,4 +1,4 @@
-package com.example.chronovox.presentation.screens.signIn
+package com.example.chronovox.presentation.screens.auth.signIn
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +27,6 @@ import com.example.chronovox.presentation.components.HeadingTextComponent
 import com.example.chronovox.presentation.components.InputTextField
 import com.example.chronovox.presentation.components.PasswordTextField
 import com.example.chronovox.presentation.components.RegularButtonComponent
-import com.example.chronovox.presentation.screens.signUp.SignUpUiEvent
 import com.example.chronovox.theme.ChronoWhite
 
 @Composable

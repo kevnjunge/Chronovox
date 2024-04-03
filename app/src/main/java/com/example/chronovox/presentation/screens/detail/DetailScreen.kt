@@ -76,6 +76,7 @@ fun DetailScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
+                            navController.popBackStack(route = Screen.Home.route, inclusive = true)
                             navController.navigate(Screen.Home.route)
                         }
                     ) {
@@ -116,7 +117,8 @@ fun DetailScreen(
                 scope.launch {
                     snackBarHostState.showSnackbar("Journal Added Successfully")
                     detailViewModel?.resetJournalEntryAddedStatus()
-                    navController.navigate(route = Screen.Home.route)
+                    navController.popBackStack(route = Screen.Home.route, inclusive = true)
+                    navController.navigate(Screen.Home.route)
                 }
             }
 
@@ -124,7 +126,8 @@ fun DetailScreen(
                 scope.launch {
                     snackBarHostState.showSnackbar("Journal Updated Successfully")
                     detailViewModel?.resetJournalEntryAddedStatus()
-                    navController.navigate(route = Screen.Home.route)
+                    navController.popBackStack(route = Screen.Home.route, inclusive = true)
+                    navController.navigate(Screen.Home.route)
                 }
             }
             

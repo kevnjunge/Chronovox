@@ -6,13 +6,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.chronovox.presentation.screens.auth.signIn.SignInScreen
+import com.example.chronovox.presentation.screens.auth.signIn.SignInViewModel
+import com.example.chronovox.presentation.screens.auth.signUp.SignUpScreen
 import com.example.chronovox.presentation.screens.detail.DetailScreen
 import com.example.chronovox.presentation.screens.detail.DetailViewModel
 import com.example.chronovox.presentation.screens.home.HomeScreen
 import com.example.chronovox.presentation.screens.home.HomeViewModel
-import com.example.chronovox.presentation.screens.signIn.SignInScreen
-import com.example.chronovox.presentation.screens.signIn.SignInViewModel
-import com.example.chronovox.presentation.screens.signUp.SignUpScreen
 
 @Composable
 fun SetUpNavGraph(

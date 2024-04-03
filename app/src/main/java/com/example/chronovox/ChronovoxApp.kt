@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.chronovox.navigation.SetUpNavGraph
+import com.example.chronovox.presentation.screens.auth.signIn.SignInViewModel
 import com.example.chronovox.presentation.screens.detail.DetailViewModel
 import com.example.chronovox.presentation.screens.home.HomeViewModel
-import com.example.chronovox.presentation.screens.signIn.SignInViewModel
 
 @Composable
 fun ChronovoxApp(

@@ -1,4 +1,4 @@
-package com.example.chronovox.presentation.screens.signIn
+package com.example.chronovox.presentation.screens.auth.signIn
 
 data class SignInUiState (
     var email: String = "",

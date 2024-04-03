@@ -42,6 +42,10 @@ class HomeViewModel(
         homeUiState = homeUiState.copy(journalDeletedStatus = it)
     }
 
+    fun resetJournalDeletedStatus() {
+        homeUiState = homeUiState.copy(journalDeletedStatus = false)
+    }
+
     fun signOut() = repository.signOut()
 
 

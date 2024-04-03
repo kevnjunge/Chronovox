@@ -1,4 +1,4 @@
-package com.example.chronovox.presentation.screens.signIn
+package com.example.chronovox.presentation.screens.auth.signIn
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

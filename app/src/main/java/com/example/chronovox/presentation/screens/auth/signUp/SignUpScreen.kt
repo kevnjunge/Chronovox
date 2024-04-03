@@ -1,4 +1,4 @@
-package com.example.chronovox.presentation.screens.signUp
+package com.example.chronovox.presentation.screens.auth.signUp
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

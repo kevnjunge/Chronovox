@@ -54,7 +54,7 @@ import com.example.chronovox.theme.verticalLineRed
 fun PaperText(
     detailViewModel: DetailViewModel?
 ) {
-    val title by remember { mutableStateOf("") } // New state variable for title
+
     val detailUiState = detailViewModel?.detailUiState ?: DetailUiState()
     Box(
         modifier = Modifier

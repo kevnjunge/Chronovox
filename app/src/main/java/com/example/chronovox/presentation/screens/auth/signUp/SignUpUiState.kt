@@ -1,4 +1,4 @@
-package com.example.chronovox.presentation.screens.signUp
+package com.example.chronovox.presentation.screens.auth.signUp
 
 data class SignUpUiState (
     var name: String = "",

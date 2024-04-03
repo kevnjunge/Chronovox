@@ -1,7 +1,6 @@
 package com.example.chronovox.presentation.components
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -50,23 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chronovox.theme.ColombiaBlue
 import com.example.chronovox.theme.DelftBlue
-
-@Composable
-fun RegularTextComponent(value: String) {
-    Text(
-        text = value,
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 40.dp),
-        style = TextStyle(
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Normal,
-            fontStyle = FontStyle.Normal
-        ),
-        color = Color.Black,
-        textAlign = TextAlign.Center
-    )
-}
 
 @Composable
 fun HeadingTextComponent(value: String) {
@@ -196,9 +177,6 @@ fun ClickableTextComponent(
             .padding(vertical = 20.dp),
         contentAlignment = Alignment.Center
     ) {
-        val initialText = initialText
-        val actionText = actionText
-
 
         val annotatedString = buildAnnotatedString {
             append(initialText)
@@ -297,12 +275,7 @@ fun ContinueWithGoogle(text: String, onclick: () -> Unit) {
         }
     }
 }
-@Composable
-fun showToast(message: String) {
-    val context = LocalContext.current
-    val toast = remember { Toast.makeText(context, message, Toast.LENGTH_SHORT) }
-    toast.show()
-}
+
 @Composable
 fun DividerTextComponent() {
     Row(

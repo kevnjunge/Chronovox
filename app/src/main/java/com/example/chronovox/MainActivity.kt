@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import com.example.chronovox.presentation.screens.auth.signIn.SignInViewModel
 import com.example.chronovox.presentation.screens.detail.DetailViewModel
 import com.example.chronovox.presentation.screens.home.HomeViewModel
-import com.example.chronovox.presentation.screens.signIn.SignInViewModel
 
 class MainActivity : ComponentActivity() {
 

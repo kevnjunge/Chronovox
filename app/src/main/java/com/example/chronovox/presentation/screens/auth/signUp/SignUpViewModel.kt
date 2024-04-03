@@ -1,4 +1,4 @@
-package com.example.chronovox.presentation.screens.signUp
+package com.example.chronovox.presentation.screens.auth.signUp
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +44,7 @@ class SignUpViewModel : ViewModel() {
                 signUp()
             }
 
-            else -> {}
+
         }
     }
 

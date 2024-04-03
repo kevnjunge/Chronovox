@@ -17,9 +17,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -48,6 +52,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.chronovox.R
 import com.example.chronovox.model.Journals
@@ -189,13 +194,21 @@ fun HomeScreen(
 
     }
 
+    LaunchedEffect(key1 = homeUiState.journalDeletedStatus) {
+        if (homeUiState.journalDeletedStatus) {
+            snackBarHostState.showSnackbar(
+                "Journal entry deleted successfully!"
+            )
+            // Reset journalDeletedStatus after showing toast (optional)
+            homeViewModel?.resetJournalDeletedStatus()
+        }
+    }
+
     LaunchedEffect(key1 = homeViewModel?.hasUser) {
         if (homeViewModel?.hasUser == false) {
             navController.navigate(Screen.SignIn.route)
         }
     }
-
-
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -205,10 +218,15 @@ fun JournalEntryItem(
     onLongClick: () -> Unit,
     onClick: () -> Unit
 ) {
+    val viewModel = viewModel<HomeViewModel>()
+    var showDeleteDialog by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .combinedClickable(
-                onLongClick = { onLongClick.invoke() },
+                onLongClick = {
+                    onLongClick()
+                    showDeleteDialog = true
+                },
                 onClick = { onClick.invoke() }
             )
             .padding(8.dp)
@@ -250,8 +268,44 @@ fun JournalEntryItem(
                 maxLines = 4
             )
         }
+        if (showDeleteDialog) {
+            AlertDialog(
+                shape = RoundedCornerShape(6.dp),
+                containerColor = CardBG,
+                onDismissRequest = { showDeleteDialog = false },
+                title = {
+                    Text(text = "Delete Confirmation")
+                },
+                text = {
+                    Text(text = "Are you sure you want to delete this journal entry?")
+                },
+                confirmButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MicadoYellow
+                        ),
+                        onClick = {
+                            // Call the delete function from ViewModel here, passing journalEntry.documentId
+                            viewModel.deleteJournalEntry(journalEntry.documentId)
+                            showDeleteDialog = false // Close the dialog after deletion
+                        }
+                    ) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MicadoYellow
+                        ),
+                        onClick = { showDeleteDialog = false }
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
     }
-
 }
 
 private fun formatDate(timestamp: Timestamp): String {
